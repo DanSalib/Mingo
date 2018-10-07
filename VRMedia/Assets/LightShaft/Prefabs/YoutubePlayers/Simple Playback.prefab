@@ -40,7 +40,7 @@ Transform:
   m_GameObject: {fileID: 1229350622160358}
   m_LocalRotation: {x: -0, y: -0.7071068, z: 0.70710677, w: 0}
   m_LocalPosition: {x: 0, y: -2.4, z: 28.4}
-  m_LocalScale: {x: 2.00372, y: 1, z: 1}
+  m_LocalScale: {x: 80, y: 40, z: 30}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -230,7 +230,7 @@ VideoPlayer:
   - {fileID: 82552107621399858}
   m_DirectAudioVolumes:
   - 1
-  m_Url: 
+  m_Url: https://www.youtube.com/watch?v=j6pSKuLOqKI
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
