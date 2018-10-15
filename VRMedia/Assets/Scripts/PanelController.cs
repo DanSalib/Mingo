@@ -6,17 +6,29 @@ public class PanelController : MonoBehaviour {
 
     public delegate void PanelClick(PanelController panel);
     public static event PanelClick OnClicked;
-    public string url;
+    public string categoryId;
+
+    public bool startPanel;
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
+        YoutubeVideoListCreator.OnLoad += LoadPanel;
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    public void LoadPanel(string id)
+    {
+        if(this.categoryId == id)
+        {
+            OnClicked(this);
+            YoutubeVideoListCreator.OnLoad -= LoadPanel;
+        }
+    }
 
     public void OnPanelClick()
     {

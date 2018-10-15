@@ -9,7 +9,7 @@ public class MediaController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        PanelController.OnClicked += OnPanelClick;
+        VideoItemController.OnClicked += OnVideoClick;
     }
 
     // Update is called once per frame
@@ -17,10 +17,11 @@ public class MediaController : MonoBehaviour {
 		
 	}
 
-    public void OnPanelClick(PanelController panel)
+    public void OnVideoClick(VideoListItem video)
     {
         SimplePlayback.Play_Pause();
-        SimplePlayback.PlayYoutubeVideo(panel.url);
+        SimplePlayback.videoId = video.Id;
+        SimplePlayback.PlayYoutubeVideo(video.Id);
     }
 
     private string ParseVideoId(string url)
@@ -28,5 +29,10 @@ public class MediaController : MonoBehaviour {
         UnityEngine.Debug.Log(url.Substring(url.Length - 11, 11));
 
         return url.Substring(url.Length - 11, 11);
+    }
+
+    private void OnDestroy()
+    {
+        VideoItemController.OnClicked -= OnVideoClick;
     }
 }
