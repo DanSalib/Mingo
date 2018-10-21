@@ -18,9 +18,14 @@ public class ListController : MonoBehaviour {
     {
         { "music" , "Music" },
         { "relaxing%20nature", "Relaxing Nature" },
-        { "automotive", "Automotive" },
+        { "car%20racing", "Car Racing" },
         { "comedy", "Comedy" },
-        { "news", "News" },
+        { "canadian%20news", "News" },
+        { "basketball", "Basketball" },
+        { "soccer", "Soccer" },
+        { "hockey", "Hockey" },
+        { "gaming", "Gaming" },
+        { "cooking", "Cooking" }
     };
 
     // Use this for initialization

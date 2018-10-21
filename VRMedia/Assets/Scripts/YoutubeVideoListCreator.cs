@@ -13,13 +13,19 @@ public class YoutubeVideoListCreator : MonoBehaviour
     public static event LoadCategory OnLoad;
 
     private string apiKey = "AIzaSyCOu6VAoXIymLoI-5U5CWh3LFOAoVGXvIQ";
+    public int maxResults = 20;
     public Dictionary<string, List<VideoListItem>> CategoryVideos = new Dictionary<string, List<VideoListItem>>
     {
         { "music" , new List<VideoListItem>() },
         { "relaxing%20nature" , new List<VideoListItem>() },
-        { "news" , new List<VideoListItem>() },
+        { "canadian%20news" , new List<VideoListItem>() },
         { "comedy" , new List<VideoListItem>() },
-        { "automotive" , new List<VideoListItem>() },
+        { "car%20racing" , new List<VideoListItem>() },
+        { "cooking" , new List<VideoListItem>() },
+        { "basketball" , new List<VideoListItem>() },
+        { "soccer" , new List<VideoListItem>() },
+        { "hockey" , new List<VideoListItem>() },
+        { "gaming" , new List<VideoListItem>() }
     };
 
     void Start()
@@ -33,7 +39,7 @@ public class YoutubeVideoListCreator : MonoBehaviour
         foreach (string key in CategoryVideos.Keys)
         {
             Debug.Log(key);
-            UnityWebRequest www = UnityWebRequest.Get("https://www.googleapis.com/youtube/v3/search?q=" + key + "&maxResults=10&part=snippet&type=video&key=AIzaSyCOu6VAoXIymLoI-5U5CWh3LFOAoVGXvIQ");
+            UnityWebRequest www = UnityWebRequest.Get("https://www.googleapis.com/youtube/v3/search?q=" + key + "&maxResults=" + maxResults + "&part=snippet&type=video&key=AIzaSyCOu6VAoXIymLoI-5U5CWh3LFOAoVGXvIQ");
             //UnityWebRequest www = UnityWebRequest.Get("https://www.googleapis.com/youtube/v3/videos?part=snippet&chart=mostpopular&videoCategoryId=" + key + "&maxResults=10&key=" + apiKey);
             yield return www.SendWebRequest();
 

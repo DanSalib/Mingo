@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class PanelController : MonoBehaviour {
 
     public delegate void PanelClick(PanelController panel);
     public static event PanelClick OnClicked;
     public string categoryId;
+    public Text PanelText;
 
     public bool startPanel;
 

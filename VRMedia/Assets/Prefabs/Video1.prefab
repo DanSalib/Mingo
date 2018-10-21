@@ -21,9 +21,9 @@ GameObject:
   - component: {fileID: 224063042353124626}
   - component: {fileID: 222590000513050968}
   - component: {fileID: 114351249522232124}
-  - component: {fileID: 114328655300124500}
   - component: {fileID: 114287741963389018}
-  - component: {fileID: 114538692408107344}
+  - component: {fileID: 114023569198733238}
+  - component: {fileID: 114882961171297086}
   m_Layer: 5
   m_Name: Video1
   m_TagString: Untagged
@@ -31,16 +31,16 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1467617262930918
+--- !u!1 &1472800039692012
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 224160599235589104}
-  - component: {fileID: 222824847118661388}
-  - component: {fileID: 114087868950550434}
+  - component: {fileID: 224990560314041444}
+  - component: {fileID: 222612682545559204}
+  - component: {fileID: 114165068997825480}
   m_Layer: 5
   m_Name: RawImage
   m_TagString: Untagged
@@ -65,12 +65,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &114087868950550434
+--- !u!114 &114023569198733238
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1467617262930918}
+  m_GameObject: {fileID: 1088346834193546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7bcbdc190835b742928f4fceb9d9c18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  video: {fileID: 114882961171297086}
+--- !u!114 &114165068997825480
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1472800039692012}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -98529514, guid: f70555f144d8491a825f0804e09c671c, type: 3}
@@ -84,7 +96,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: a3d6764a099de6740b56a426d842b69b, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -130,7 +142,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114538692408107344}
+      - m_Target: {fileID: 114023569198733238}
         m_MethodName: OnClick
         m_Mode: 1
         m_Arguments:
@@ -143,22 +155,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114328655300124500
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1088346834193546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85e4b78de7247fa41a34df3172d5a43a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Id: 8aC9bE3wFL0
-  Title: Daniel Tosh - "People Pleaser (2016)" Stand Up Comedy Special
-  ThumbnailUrl: https://i.ytimg.com/vi/8aC9bE3wFL0/mqdefault.jpg
-  VideoTitle: {fileID: 114856428481373788}
-  Thumbnail: {fileID: 114087868950550434}
 --- !u!114 &114351249522232124
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -171,7 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.122}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -186,18 +182,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114538692408107344
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1088346834193546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7bcbdc190835b742928f4fceb9d9c18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  video: {fileID: 114328655300124500}
 --- !u!114 &114856428481373788
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -219,7 +203,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 16
+    m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
@@ -230,7 +214,23 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Daniel Tosh - "People Pleaser (2016)" Stand Up Comedy Special
+  m_Text: News
+--- !u!114 &114882961171297086
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1088346834193546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85e4b78de7247fa41a34df3172d5a43a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id: 
+  Title: 
+  ThumbnailUrl: 
+  VideoTitle: {fileID: 114856428481373788}
+  Thumbnail: {fileID: 114165068997825480}
 --- !u!222 &222371921432546378
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -243,12 +243,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1088346834193546}
---- !u!222 &222824847118661388
+--- !u!222 &222612682545559204
 CanvasRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1467617262930918}
+  m_GameObject: {fileID: 1472800039692012}
 --- !u!224 &224063042353124626
 RectTransform:
   m_ObjectHideFlags: 1
@@ -260,14 +260,14 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224087114614023630}
-  - {fileID: 224160599235589104}
+  - {fileID: 224990560314041444}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 60}
-  m_SizeDelta: {x: 252.3, y: 165.5}
+  m_AnchoredPosition: {x: -16.2, y: 60}
+  m_SizeDelta: {x: 205.34, y: 165.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224087114614023630
 RectTransform:
@@ -284,15 +284,15 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 125.3, y: -51.9}
-  m_SizeDelta: {x: 228.2, y: 48.6}
+  m_AnchoredPosition: {x: 102.4, y: -53.7}
+  m_SizeDelta: {x: 190.4, y: 48.6}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!224 &224160599235589104
+--- !u!224 &224990560314041444
 RectTransform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1467617262930918}
+  m_GameObject: {fileID: 1472800039692012}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -300,8 +300,8 @@ RectTransform:
   m_Father: {fileID: 224063042353124626}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 99.1, y: -57.61}
-  m_SizeDelta: {x: 180, y: 100}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.6, y: 24.3}
+  m_SizeDelta: {x: 187.7, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
