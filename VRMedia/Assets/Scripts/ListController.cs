@@ -12,8 +12,6 @@ public class ListController : MonoBehaviour {
 
     public VideoListItem[] VideoList;
 
-    public Text CategoryTitle;
-
     private Dictionary<string, string> CategoryIdToTitle = new Dictionary<string, string>
     {
         { "music" , "Music" },
@@ -40,8 +38,6 @@ public class ListController : MonoBehaviour {
 
     public void RefreshList(PanelController panel)
     {
-        CategoryTitle.text = CategoryIdToTitle[panel.categoryId];
-
         UnityEngine.Debug.Log("id = " + panel.categoryId);
         int i = 0;
         foreach (VideoListItem vid in VideoListCreator.CategoryVideos[panel.categoryId])

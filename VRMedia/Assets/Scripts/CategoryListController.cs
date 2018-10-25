@@ -31,9 +31,6 @@ public class CategoryListController : MonoBehaviour {
 
     private void SetupCategories()
     {
-        for(int i = 0; i < PanelList.Length; i++)
-        {
-            PanelList[i].categoryId = CategoryTitleToId[PanelList[i].PanelText.text];
-        }
+
     }
 }

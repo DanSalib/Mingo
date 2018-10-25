@@ -19,9 +19,12 @@ public class MediaController : MonoBehaviour {
 
     public void OnVideoClick(VideoListItem video)
     {
-        SimplePlayback.Play_Pause();
-        SimplePlayback.videoId = video.Id;
-        SimplePlayback.PlayYoutubeVideo(video.Id);
+        if (video != null && video.Id != string.Empty)
+        {
+            SimplePlayback.Play_Pause();
+            SimplePlayback.videoId = video.Id;
+            SimplePlayback.PlayYoutubeVideo(video.Id);
+        }
     }
 
     private string ParseVideoId(string url)
