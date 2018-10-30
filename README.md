@@ -1,5 +1,5 @@
 # Mingo
-Mingo is a mixed reality media player targeted towards patients in medical environments relieve anxiety. (Previously VRMedia)
+Mingo is a mixed reality media player targeted towards patients in medical environments relieve anxiety.
 
 ![d59d3ca85aefca718885103aba2ab249](https://user-images.githubusercontent.com/24818991/47701942-ba4fa200-dbd8-11e8-9446-0fad6fdc3ed5.jpg)
 
