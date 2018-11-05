@@ -12,6 +12,10 @@ public class MainUIController : MonoBehaviour {
 
     public GameObject CategoryUI;
 
+    public ListController ListController;
+
+    public NavigationController NavController;
+
     public delegate void PanelsLoaded(PanelController panel);
     public static event PanelsLoaded OnLoaded;
 
@@ -36,6 +40,7 @@ public class MainUIController : MonoBehaviour {
 
     public void ShowListUI(PanelController panel)
     {
+        NavController.curPanel = ListController.VideoList[0].gameObject.GetComponent<NavObject>();
         VideoListUI.SetActive(true);
         StartCoroutine(ShowVideos());
         StartCoroutine(HideCategories());
@@ -43,6 +48,7 @@ public class MainUIController : MonoBehaviour {
 
     public void HideListUI(VideoListItem vid)
     {
+        NavController.curPanel = ListController.curCategoryPanel.gameObject.GetComponent<NavObject>();
         StartCoroutine(ShowCategories());
         StartCoroutine(HideVideos());
     }
@@ -72,6 +78,7 @@ public class MainUIController : MonoBehaviour {
             yield return null;
         }
         CategoryUI.SetActive(false);
+        NavController.moveIndicator();
     }
 
     private IEnumerator HideVideos()
@@ -92,6 +99,7 @@ public class MainUIController : MonoBehaviour {
             yield return null;
         }
         VideoListUI.SetActive(false);
+        NavController.moveIndicator();
     }
 
     private IEnumerator ShowVideos()

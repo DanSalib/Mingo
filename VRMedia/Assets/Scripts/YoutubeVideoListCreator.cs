@@ -25,7 +25,7 @@ public class YoutubeVideoListCreator : MonoBehaviour
         { "basketball" , new List<VideoListItem>() },
         { "soccer" , new List<VideoListItem>() },
         { "hockey" , new List<VideoListItem>() },
-        { "gaming" , new List<VideoListItem>() }
+        { "league%20worlds" , new List<VideoListItem>() }
     };
 
     void Start()

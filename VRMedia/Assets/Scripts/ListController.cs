@@ -8,6 +8,8 @@ public class ListController : MonoBehaviour {
 
     public GameObject SideBar;
 
+    public PanelController curCategoryPanel;
+
     public YoutubeVideoListCreator VideoListCreator;
 
     public VideoListItem[] VideoList;
@@ -22,7 +24,7 @@ public class ListController : MonoBehaviour {
         { "basketball", "Basketball" },
         { "soccer", "Soccer" },
         { "hockey", "Hockey" },
-        { "gaming", "Gaming" },
+        { "league%20worlds", "Gaming" },
         { "cooking", "Cooking" }
     };
 
@@ -38,7 +40,7 @@ public class ListController : MonoBehaviour {
 
     public void RefreshList(PanelController panel)
     {
-        UnityEngine.Debug.Log("id = " + panel.categoryId);
+        curCategoryPanel = panel;
         int i = 0;
         foreach (VideoListItem vid in VideoListCreator.CategoryVideos[panel.categoryId])
         {

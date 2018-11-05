@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 224508910670344166}
   - component: {fileID: 114402873826993932}
   - component: {fileID: 114274581564914906}
+  - component: {fileID: 114893487945481070}
   m_Layer: 5
   m_Name: Category1Panel
   m_TagString: Untagged
@@ -83,8 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce60b27fa93889a42a0e1930252a7a3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  categoryId: 
-  PanelText: {fileID: 0}
+  categoryId: basketball
   startPanel: 0
 --- !u!114 &114402873826993932
 MonoBehaviour:
@@ -138,6 +138,23 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114893487945481070
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1548961326552040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88588e465291a0f43a9a513f6e7337a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisButton: {fileID: 114402873826993932}
+  thisObject: {fileID: 1548961326552040}
+  upNeighbor: {fileID: 0}
+  downNeighbor: {fileID: 0}
+  leftNeighbor: {fileID: 0}
+  rightNeighbor: {fileID: 0}
 --- !u!222 &222996654156115572
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -160,8 +177,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -55.5, y: -82.2}
-  m_SizeDelta: {x: 150, y: 75}
+  m_AnchoredPosition: {x: 210, y: -82.2}
+  m_SizeDelta: {x: 180, y: 110}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224599259922346416
 RectTransform:
