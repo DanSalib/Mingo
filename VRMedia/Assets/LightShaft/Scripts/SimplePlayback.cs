@@ -21,6 +21,10 @@ public class SimplePlayback : MonoBehaviour
     int maxRetryUntilToGetFromWebServer = 2;
     int currentRetry = 0;
 
+    public delegate void VideoPrepared();
+    public static event VideoPrepared OnReady;
+
+
     IEnumerator Start()
     {
         yield return new WaitForSeconds(1);
@@ -110,7 +114,6 @@ public class SimplePlayback : MonoBehaviour
         }
     }
 
-
     IEnumerator PreparingAudio()
     {
         //Wait until video is prepared
@@ -133,6 +136,8 @@ public class SimplePlayback : MonoBehaviour
         unityVideoPlayer.Play();
 
         Debug.Log("Playing Video");
+        OnReady();
+
         while (unityVideoPlayer.isPlaying)
         {
             yield return null;

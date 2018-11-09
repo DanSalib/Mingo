@@ -48,6 +48,7 @@ public class MainUIController : MonoBehaviour {
 
     public void HideListUI(VideoListItem vid)
     {
+        NavController.prevPanel = null;
         NavController.curPanel = ListController.curCategoryPanel.gameObject.GetComponent<NavObject>();
         StartCoroutine(ShowCategories());
         StartCoroutine(HideVideos());
@@ -79,6 +80,7 @@ public class MainUIController : MonoBehaviour {
         }
         CategoryUI.SetActive(false);
         NavController.moveIndicator();
+        NavController.indicator.transform.localScale = new Vector3(1.95f, 2.4f);
     }
 
     private IEnumerator HideVideos()
@@ -88,7 +90,7 @@ public class MainUIController : MonoBehaviour {
 
         Vector3 originalLocation = this.VideoListUI.transform.localPosition;
         Button[] buttons = this.CategoryUI.GetComponentsInChildren<Button>();
-        Vector3 destination = new Vector3(1540, originalLocation.y, originalLocation.z);
+        Vector3 destination = new Vector3(1800, originalLocation.y, originalLocation.z);
 
         while (t < 1)
         {
@@ -100,16 +102,19 @@ public class MainUIController : MonoBehaviour {
         }
         VideoListUI.SetActive(false);
         NavController.moveIndicator();
+        NavController.indicator.transform.localScale = new Vector3(1.5f, 1.5f);
     }
 
     private IEnumerator ShowVideos()
     {
+        var curPos = NavController.viewPort.transform.localPosition;
+        NavController.viewPort.transform.localPosition = new Vector3(curPos.x, 24, curPos.z);
+
         int rate = 4;
         float t = 0;
 
         Vector3 originalLocation = this.VideoListUI.transform.localPosition;
-        Button[] buttons = this.CategoryUI.GetComponentsInChildren<Button>();
-        Vector3 destination = new Vector3(625, originalLocation.y, originalLocation.z);
+        Vector3 destination = new Vector3(650, originalLocation.y, originalLocation.z);
 
         while (t < 1)
         {
@@ -119,6 +124,7 @@ public class MainUIController : MonoBehaviour {
 
             yield return null;
         }
+        NavController.indicator.SetActive(true);
     }
 
     private IEnumerator ShowCategories()
@@ -145,5 +151,6 @@ public class MainUIController : MonoBehaviour {
             }
             yield return null;
         }
+        NavController.indicator.SetActive(true);
     }
 }

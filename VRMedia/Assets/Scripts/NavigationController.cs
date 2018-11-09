@@ -6,9 +6,13 @@ public class NavigationController : MonoBehaviour {
 
     public delegate void KeyPress(KeyCode key);
     public static event KeyPress OnKeyPress;
+    public Text text;
 
+    public GameObject backIndicator;
+    public GameObject viewPort;
     public GameObject indicator;
     public NavObject curPanel;
+    public NavObject prevPanel;
 
     private void Start()
     {
@@ -19,57 +23,146 @@ public class NavigationController : MonoBehaviour {
     {
         if(key == KeyCode.JoystickButton2)
         {
+            if (curPanel.isBack)
+            {
+                return;
+            }
             curPanel = curPanel.upNeighbor ?? curPanel;
+            if (viewPort.activeInHierarchy && indicator.transform.localPosition.y > -84 && viewPort.transform.localPosition.y > 50)
+            {
+                var curPos = viewPort.transform.localPosition;
+                viewPort.transform.localPosition = new Vector3(curPos.x, curPos.y - 131, curPos.z);
+            }
             moveIndicator();
         }
         else if (key == KeyCode.JoystickButton3)
         {
-            curPanel = curPanel.rightNeighbor ?? curPanel;
-            moveIndicator();
+            if (prevPanel != null)
+            {
+                backIndicator.SetActive(false);
+                indicator.SetActive(true);
+                curPanel = prevPanel;
+                prevPanel = null;
+            }
+            else
+            {
+                curPanel = curPanel.rightNeighbor ?? curPanel;
+                moveIndicator();
+            }
         }
-        else if (key == KeyCode.JoystickButton5)
+        else if (key == KeyCode.RightShift)
         {
-            curPanel = curPanel.leftNeighbor ?? curPanel;
-            moveIndicator();
-        }
-        else if (key == KeyCode.JoystickButton10)
-        {
+            if (curPanel.isBack)
+            {
+                return;
+            }
             curPanel = curPanel.downNeighbor ?? curPanel;
-            moveIndicator();
-        }
-        else if (key == KeyCode.JoystickButton7)
-        {
-            curPanel.thisButton.onClick.Invoke();
-        }
-
-        if (key == KeyCode.UpArrow)
-        {
-            curPanel = curPanel.upNeighbor ?? curPanel;
-            moveIndicator();
-        }
-        else if (key == KeyCode.RightArrow)
-        {
-            curPanel = curPanel.rightNeighbor ?? curPanel;
-            moveIndicator();
-        }
-        else if (key == KeyCode.LeftArrow)
-        {
-            curPanel = curPanel.leftNeighbor ?? curPanel;
-            moveIndicator();
-        }
-        else if (key == KeyCode.DownArrow)
-        {
-            curPanel = curPanel.downNeighbor ?? curPanel;
+            if (viewPort.activeInHierarchy && indicator.transform.localPosition.y < -200 && viewPort.transform.localPosition.y < 280)
+            {
+                var curPos = viewPort.transform.localPosition;
+                viewPort.transform.localPosition = new Vector3(curPos.x, curPos.y + 131, curPos.z);
+            }
             moveIndicator();
         }
         else if (key == KeyCode.Return)
         {
+            if(curPanel.leftNeighbor != null && curPanel.leftNeighbor.isBack)
+            {
+                backIndicator.SetActive(true);
+                indicator.SetActive(false);
+                prevPanel = curPanel;
+                curPanel = curPanel.leftNeighbor ?? curPanel;
+            }
+            else if (prevPanel == null)
+            {
+                curPanel = curPanel.leftNeighbor ?? curPanel;
+                moveIndicator();
+            }
+        }
+        else if (key == KeyCode.JoystickButton7)
+        {
             curPanel.thisButton.onClick.Invoke();
+            backIndicator.SetActive(false);
+            prevPanel = null;
+        }
+        
+
+        foreach (KeyCode kcode in System.Enum.GetValues(typeof(KeyCode)))
+        {
+            if (Input.GetKeyDown(kcode))
+                text.text += ("" + kcode);
+        }
+        
+        if (key == KeyCode.UpArrow)
+        {
+            if(curPanel.isBack)
+            {
+                return;
+            }
+            curPanel = curPanel.upNeighbor ?? curPanel;
+            if (viewPort.activeInHierarchy && indicator.transform.localPosition.y > -100 && viewPort.transform.localPosition.y > 50)
+            {
+                var curPos = viewPort.transform.localPosition;
+                viewPort.transform.localPosition = new Vector3(curPos.x, curPos.y - 131, curPos.z);
+            }
+            moveIndicator();
+        }
+        else if (key == KeyCode.RightArrow)
+        {
+            if (prevPanel != null)
+            {
+                backIndicator.SetActive(false);
+                indicator.SetActive(true);
+                curPanel = prevPanel;
+                prevPanel = null;
+            }
+            else
+            {
+                curPanel = curPanel.rightNeighbor ?? curPanel;
+                moveIndicator();
+            }
+        }
+        else if (key == KeyCode.LeftArrow)
+        {
+            if(curPanel.leftNeighbor != null && curPanel.leftNeighbor.isBack)
+            {
+                backIndicator.SetActive(true);
+                indicator.SetActive(false);
+                prevPanel = curPanel;
+                curPanel = curPanel.leftNeighbor ?? curPanel;
+            }
+            else if(prevPanel == null)
+            {
+                curPanel = curPanel.leftNeighbor ?? curPanel;
+                moveIndicator();
+            }
+        }
+        else if (key == KeyCode.DownArrow)
+        {
+            if (curPanel.isBack)
+            {
+                return;
+            }
+            curPanel = curPanel.downNeighbor ?? curPanel;
+            if (viewPort.activeInHierarchy && indicator.transform.localPosition.y < -200 && viewPort.transform.localPosition.y < 280)
+            {
+                var curPos = viewPort.transform.localPosition;
+                viewPort.transform.localPosition = new Vector3(curPos.x, curPos.y + 131, curPos.z);
+            }
+            moveIndicator();
+        }
+        else if (key == KeyCode.Space)
+        {
+            indicator.SetActive(false);
+            prevPanel = null;
+            curPanel.thisButton.onClick.Invoke();
+            backIndicator.SetActive(false);
         }
     }
 
     public void moveIndicator()
     {
+        indicator.SetActive(true);
         indicator.transform.position = curPanel.thisObject.transform.position;
     }
 
@@ -83,19 +176,19 @@ public class NavigationController : MonoBehaviour {
         {
             OnKeyPress(KeyCode.JoystickButton3);
         }
-        else if (Input.GetKeyDown(KeyCode.JoystickButton5))
+        else if (Input.GetKeyDown(KeyCode.RightShift))
         {
-            OnKeyPress(KeyCode.JoystickButton3);
+            OnKeyPress(KeyCode.RightShift);
         }
-        else if (Input.GetKeyDown(KeyCode.JoystickButton10))
+        else if (Input.GetKeyDown(KeyCode.Return))
         {
-            OnKeyPress(KeyCode.JoystickButton3);
+            OnKeyPress(KeyCode.Return);
         }
         else if (Input.GetKeyDown(KeyCode.JoystickButton7))
         {
             OnKeyPress(KeyCode.JoystickButton7);
         }
-
+        
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             OnKeyPress(KeyCode.UpArrow);
@@ -112,9 +205,9 @@ public class NavigationController : MonoBehaviour {
         {
             OnKeyPress(KeyCode.DownArrow);
         }
-        else if (Input.GetKeyDown(KeyCode.Return))
+        else if (Input.GetKeyDown(KeyCode.Space))
         {
-            OnKeyPress(KeyCode.Return);
+            OnKeyPress(KeyCode.Space);
         }
     }
 }

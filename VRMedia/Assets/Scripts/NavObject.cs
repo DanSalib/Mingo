@@ -10,5 +10,5 @@ public class NavObject : MonoBehaviour {
     public NavObject downNeighbor;
     public NavObject leftNeighbor;
     public NavObject rightNeighbor;
-
+    public bool isBack = false;
 }
