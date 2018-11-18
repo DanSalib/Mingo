@@ -81,9 +81,10 @@ public class NavigationController : MonoBehaviour {
         }
         else if (key == KeyCode.JoystickButton7)
         {
+            indicator.SetActive(false);
+            prevPanel = null;
             curPanel.thisButton.onClick.Invoke();
             backIndicator.SetActive(false);
-            prevPanel = null;
         }
         
 
@@ -147,7 +148,8 @@ public class NavigationController : MonoBehaviour {
             if (viewPort.activeInHierarchy && indicator.transform.localPosition.y < -200 && viewPort.transform.localPosition.y < 280)
             {
                 var curPos = viewPort.transform.localPosition;
-                viewPort.transform.localPosition = new Vector3(curPos.x, curPos.y + 131, curPos.z);
+                var newY = curPos.y + 131;
+                viewPort.transform.localPosition = new Vector3(curPos.x, newY, curPos.z);
             }
             moveIndicator();
         }

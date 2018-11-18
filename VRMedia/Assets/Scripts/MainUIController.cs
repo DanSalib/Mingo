@@ -108,7 +108,7 @@ public class MainUIController : MonoBehaviour {
     private IEnumerator ShowVideos()
     {
         var curPos = NavController.viewPort.transform.localPosition;
-        NavController.viewPort.transform.localPosition = new Vector3(curPos.x, 24, curPos.z);
+        NavController.viewPort.transform.localPosition = new Vector3(curPos.x, 24.6f, curPos.z);
 
         int rate = 4;
         float t = 0;

@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class MediaController : MonoBehaviour {
 
     public SimplePlayback SimplePlayback;
-    public Image loadingImage;
+    public GameObject loadingImage;
+    public GameObject loadingIndicator;
+    private Coroutine curCoroutine;
 
 	// Use this for initialization
 	void Start () {
@@ -21,15 +23,15 @@ public class MediaController : MonoBehaviour {
 
     private void VideoReady()
     {
-        StopCoroutine(VideoLoading());
-        loadingImage.gameObject.SetActive(false);
+        StopCoroutine(curCoroutine);
+        loadingImage.SetActive(false);
     }
 
     public void OnVideoClick(VideoListItem video)
     {
         if (video != null && video.Id != string.Empty)
         {
-            StartCoroutine(VideoLoading());
+            curCoroutine = StartCoroutine(VideoLoading());
             SimplePlayback.Play_Pause();
             SimplePlayback.videoId = video.Id;
             SimplePlayback.PlayYoutubeVideo(video.Id);
@@ -38,8 +40,13 @@ public class MediaController : MonoBehaviour {
 
     private IEnumerator VideoLoading()
     {
-        loadingImage.gameObject.SetActive(true);
-        yield return null;
+        loadingImage.SetActive(true);
+        loadingIndicator.SetActive(true);
+        while (true)
+        {
+            loadingIndicator.transform.Rotate(Vector3.forward,-1f);
+            yield return null;
+        }
     }
 
     private string ParseVideoId(string url)
