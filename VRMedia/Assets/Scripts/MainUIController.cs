@@ -104,7 +104,7 @@ public class MainUIController : MonoBehaviour {
 
         Vector3 originalLocation = this.MediaUI.transform.localPosition;
         Button[] buttons = this.MediaUI.GetComponentsInChildren<Button>();
-        Vector3 destination = new Vector3(originalLocation.x, -140, originalLocation.z);
+        Vector3 destination = new Vector3(originalLocation.x, -160f, originalLocation.z);
 
         while (t < 1)
         {

@@ -19,18 +19,26 @@ public class MediaController : MonoBehaviour {
     private float rmsValue = 0;   // sound level - RMS
     private float dbValue = 0;    // sound level - dB
     private float volume = 2; // set how much the scale will vary
-    private float[] samples; // audio samples
+    private float[] samples; // audio samples'
+
+    private bool videoReady = false;
 
     // Use this for initialization
     void Start () {
         VideoItemController.OnClicked += OnVideoClick;
         samples = new float[qSamples];
+        SimplePlayback.OnReady += VideoPrepared;
 
+    }
+
+    private void VideoPrepared()
+    {
+        videoReady = true;
     }
 
     private void Update()
     {
-        if(loadingImage.activeInHierarchy)
+        if(videoReady && loadingImage.activeInHierarchy)
         {
             GetVolume();
             if (dbValue > -160)
@@ -57,16 +65,21 @@ public class MediaController : MonoBehaviour {
     {
         StopCoroutine(curCoroutine);
         loadingImage.SetActive(false);
+        videoReady = false;
     }
 
     public void OnVideoClick(VideoListItem video)
     {
         if (video != null && video.Id != string.Empty)
         {
-            curCoroutine = StartCoroutine(VideoLoading());
             SimplePlayback.Play_Pause();
             SimplePlayback.videoId = video.Id;
             SimplePlayback.PlayYoutubeVideo(video.Id);
+            if (curCoroutine != null)
+            {
+                StopCoroutine(curCoroutine);
+            }
+            curCoroutine = StartCoroutine(VideoLoading());
         }
     }
 
