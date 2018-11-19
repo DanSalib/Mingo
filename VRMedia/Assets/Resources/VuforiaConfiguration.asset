@@ -24,7 +24,7 @@ MonoBehaviour:
   digitalEyewear:
     cameraOffset: 0.06
     distortionRenderingLayer: 31
-    eyewearType: 2
+    eyewearType: 0
     stereoFramework: 0
     seeThroughConfiguration: 0
     viewerName: Cardboard v1
@@ -35,15 +35,16 @@ MonoBehaviour:
       Name: test
       Manufacturer: tset
       ButtonType: 0
-      ScreenToLensDistance: 0.032
-      InterLensDistance: 0.025
+      ScreenToLensDistance: 0.035
+      InterLensDistance: 0.03
       TrayAlignment: 1
-      LensCenterToTrayDistance: 0.05
+      LensCenterToTrayDistance: 0.06
       DistortionCoefficients: {x: 0.02, y: 0.02}
-      FieldOfView: {x: 60, y: 60, z: 60, w: 60}
+      FieldOfView: {x: 40, y: 40, z: 40, w: 40}
       ContainsMagnet: 0
   databaseLoad:
-    dataSetsToLoad: []
+    dataSetsToLoad:
+    - VuforiaMars_Images
     dataSetsToActivate: []
   videoBackground:
     clippingMode: 0

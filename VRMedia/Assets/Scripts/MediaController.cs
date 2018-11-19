@@ -2,23 +2,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
+using UnityEngine.Audio;
+
 
 public class MediaController : MonoBehaviour {
 
     public SimplePlayback SimplePlayback;
     public GameObject loadingImage;
     public GameObject loadingIndicator;
+    public AudioSource videoPlayer;
     private Coroutine curCoroutine;
 
-	// Use this for initialization
-	void Start () {
+    private int qSamples = 1024;  // array size
+    private float refValue = 0.1f; // RMS value for 0 dB
+    private float rmsValue = 0;   // sound level - RMS
+    private float dbValue = 0;    // sound level - dB
+    private float volume = 2; // set how much the scale will vary
+    private float[] samples; // audio samples
+
+    // Use this for initialization
+    void Start () {
         VideoItemController.OnClicked += OnVideoClick;
-        SimplePlayback.OnReady += VideoReady;
+        samples = new float[qSamples];
+
     }
 
-    // Update is called once per frame
-    void Update () {
+    private void Update()
+    {
+        if(loadingImage.activeInHierarchy)
+        {
+            GetVolume();
+            if (dbValue > -160)
+            {
+                VideoReady();
+            }
+        }
+    }
 
+    private void GetVolume()
+    {
+        videoPlayer.GetOutputData(samples, 0); // fill array with samples
+        float sum = 0;
+        for (int i = 0; i < qSamples; i++)
+        {
+            sum += samples[i] * samples[i]; // sum squared samples
+        }
+        rmsValue = Mathf.Sqrt(sum / qSamples); // rms = square root of average
+        dbValue = 20 * Mathf.Log10(rmsValue / refValue); // calculate dB
+        if (dbValue < -160) dbValue = -160; // clamp it to -160dB min
     }
 
     private void VideoReady()

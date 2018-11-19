@@ -8,6 +8,8 @@ public class NavigationController : MonoBehaviour {
     public static event KeyPress OnKeyPress;
     public Text text;
 
+    public MainUIController uiController;
+
     public GameObject backIndicator;
     public GameObject viewPort;
     public GameObject indicator;
@@ -21,6 +23,10 @@ public class NavigationController : MonoBehaviour {
 
     private void ChangeCurPanel(KeyCode key)
     {
+        if(uiController.disableButtons == true)
+        {
+            return;
+        }
         if(key == KeyCode.JoystickButton2)
         {
             if (curPanel.isBack)
