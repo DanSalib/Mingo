@@ -14,18 +14,18 @@ public class ListController : MonoBehaviour {
 
     public VideoListItem[] VideoList;
 
-    private Dictionary<string, string> CategoryIdToTitle = new Dictionary<string, string>
+    private Dictionary<string, Dictionary<string, Texture>> CategoryIdToThumbnails = new Dictionary<string, Dictionary<string, Texture>>
     {
-        { "music" , "Music" },
-        { "relaxing%20nature", "Relaxing Nature" },
-        { "car%20racing", "Car Racing" },
-        { "comedy", "Comedy" },
-        { "canadian%20news", "News" },
-        { "basketball", "Basketball" },
-        { "soccer", "Soccer" },
-        { "hockey", "Hockey" },
-        { "league%20worlds", "Gaming" },
-        { "cooking", "Cooking" }
+        { "music" , new Dictionary<string, Texture>() },
+        { "nature", new Dictionary<string, Texture>() },
+        { "automotive", new Dictionary<string, Texture>() },
+        { "comedy", new Dictionary<string, Texture>() },
+        { "news", new Dictionary<string, Texture>() },
+        { "nba", new Dictionary<string, Texture>() },
+        { "soccer", new Dictionary<string, Texture>()},
+        { "nhl", new Dictionary<string, Texture>() },
+        { "gaming", new Dictionary<string, Texture>() },
+        { "cooking", new Dictionary<string, Texture>() }
     };
 
     // Use this for initialization
@@ -48,12 +48,19 @@ public class ListController : MonoBehaviour {
             VideoList[i].Id = vid.Id;
             VideoList[i].ThumbnailUrl = vid.ThumbnailUrl;
             VideoList[i].VideoTitle.text = vid.Title;
-            StartCoroutine(GetImage(VideoList[i]));
+            if(CategoryIdToThumbnails[panel.categoryId].ContainsKey(vid.Id))
+            {
+                VideoList[i].Thumbnail.texture = CategoryIdToThumbnails[panel.categoryId][vid.Id];
+            }
+            else
+            {
+                StartCoroutine(GetImage(VideoList[i], panel.categoryId));
+            }
             i++;
         }
     }
 
-    IEnumerator GetImage(VideoListItem listItem)
+    IEnumerator GetImage(VideoListItem listItem, string categoryId)
     {
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(listItem.ThumbnailUrl);
         yield return www.Send();
@@ -65,6 +72,7 @@ public class ListController : MonoBehaviour {
         else
         {
             listItem.Thumbnail.texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            CategoryIdToThumbnails[categoryId].Add(listItem.Id, listItem.Thumbnail.texture);
         }
     }
 

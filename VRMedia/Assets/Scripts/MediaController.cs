@@ -76,7 +76,7 @@ public class MediaController : MonoBehaviour {
         loadingIndicator.SetActive(true);
         while (true)
         {
-            loadingIndicator.transform.Rotate(Vector3.forward,-1f);
+            loadingIndicator.transform.Rotate(Vector3.forward,-2f);
             yield return null;
         }
     }
