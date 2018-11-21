@@ -42,7 +42,7 @@ public class MainUIController : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-		if(SleepTimer?.ElapsedMilliseconds > 3500f)
+		if(CategoryUI.activeInHierarchy && SleepTimer?.ElapsedMilliseconds > 3500f)
         {
             NavController.indicator.SetActive(false);
             StartCoroutine(CenterVideo());
@@ -52,7 +52,7 @@ public class MainUIController : MonoBehaviour {
         }
 	}
 
-    public void ActivateUI(KeyCode key)
+    public void ActivateUI(NavigationController.directions d)
     {
         if(CategoryUI.activeInHierarchy)
         {

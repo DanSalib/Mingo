@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class NavigationController : MonoBehaviour {
 
-    public delegate void KeyPress(KeyCode key);
+    public delegate void KeyPress(directions d);
     public static event KeyPress OnKeyPress;
     public Text text;
 
@@ -21,13 +21,22 @@ public class NavigationController : MonoBehaviour {
         OnKeyPress += ChangeCurPanel;
     }
 
-    private void ChangeCurPanel(KeyCode key)
+    public enum directions
+    {
+        up = 0,
+        down = 1,
+        left = 2,
+        right = 3,
+        click = 4
+    };
+
+    private void ChangeCurPanel(directions d)
     {
         if(uiController.disableButtons == true)
         {
             return;
         }
-        if(key == KeyCode.JoystickButton2)
+        if(d == directions.up)
         {
             if (curPanel.isBack)
             {
@@ -41,7 +50,7 @@ public class NavigationController : MonoBehaviour {
             }
             moveIndicator();
         }
-        else if (key == KeyCode.JoystickButton3)
+        else if (d == directions.right)
         {
             if (prevPanel != null)
             {
@@ -56,7 +65,7 @@ public class NavigationController : MonoBehaviour {
                 moveIndicator();
             }
         }
-        else if (key == KeyCode.RightShift)
+        else if (d == directions.down)
         {
             if (curPanel.isBack)
             {
@@ -70,7 +79,7 @@ public class NavigationController : MonoBehaviour {
             }
             moveIndicator();
         }
-        else if (key == KeyCode.Return)
+        else if (d == directions.left)
         {
             if(curPanel.leftNeighbor != null && curPanel.leftNeighbor.isBack)
             {
@@ -85,81 +94,7 @@ public class NavigationController : MonoBehaviour {
                 moveIndicator();
             }
         }
-        else if (key == KeyCode.JoystickButton7)
-        {
-            indicator.SetActive(false);
-            prevPanel = null;
-            curPanel.thisButton.onClick.Invoke();
-            backIndicator.SetActive(false);
-        }
-        
-
-        foreach (KeyCode kcode in System.Enum.GetValues(typeof(KeyCode)))
-        {
-            if (Input.GetKeyDown(kcode))
-                text.text += ("" + kcode);
-        }
-        
-        if (key == KeyCode.UpArrow)
-        {
-            if(curPanel.isBack)
-            {
-                return;
-            }
-            curPanel = curPanel.upNeighbor ?? curPanel;
-            if (viewPort.activeInHierarchy && indicator.transform.localPosition.y > -100 && viewPort.transform.localPosition.y > 50)
-            {
-                var curPos = viewPort.transform.localPosition;
-                viewPort.transform.localPosition = new Vector3(curPos.x, curPos.y - 131, curPos.z);
-            }
-            moveIndicator();
-        }
-        else if (key == KeyCode.RightArrow)
-        {
-            if (prevPanel != null)
-            {
-                backIndicator.SetActive(false);
-                indicator.SetActive(true);
-                curPanel = prevPanel;
-                prevPanel = null;
-            }
-            else
-            {
-                curPanel = curPanel.rightNeighbor ?? curPanel;
-                moveIndicator();
-            }
-        }
-        else if (key == KeyCode.LeftArrow)
-        {
-            if(curPanel.leftNeighbor != null && curPanel.leftNeighbor.isBack)
-            {
-                backIndicator.SetActive(true);
-                indicator.SetActive(false);
-                prevPanel = curPanel;
-                curPanel = curPanel.leftNeighbor ?? curPanel;
-            }
-            else if(prevPanel == null)
-            {
-                curPanel = curPanel.leftNeighbor ?? curPanel;
-                moveIndicator();
-            }
-        }
-        else if (key == KeyCode.DownArrow)
-        {
-            if (curPanel.isBack)
-            {
-                return;
-            }
-            curPanel = curPanel.downNeighbor ?? curPanel;
-            if (viewPort.activeInHierarchy && indicator.transform.localPosition.y < -200 && viewPort.transform.localPosition.y < 280)
-            {
-                var curPos = viewPort.transform.localPosition;
-                var newY = curPos.y + 131;
-                viewPort.transform.localPosition = new Vector3(curPos.x, newY, curPos.z);
-            }
-            moveIndicator();
-        }
-        else if (key == KeyCode.Space)
+        else if (d == directions.click)
         {
             indicator.SetActive(false);
             prevPanel = null;
@@ -176,46 +111,95 @@ public class NavigationController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if(Input.GetKeyDown(KeyCode.JoystickButton2))
+        //foreach (KeyCode kcode in System.Enum.GetValues(typeof(KeyCode)))
+        //{
+        //    if (Input.GetKeyDown(kcode))
+        //        text.text += ("" + kcode);
+        //}
+        //if (Input.GetKeyDown(KeyCode.JoystickButton2))
+        //{
+        //    OnKeyPress(KeyCode.JoystickButton2);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.JoystickButton3))
+        //{
+        //    OnKeyPress(KeyCode.JoystickButton3);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.RightShift))
+        //{
+        //    OnKeyPress(KeyCode.RightShift);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.Return))
+        //{
+        //    OnKeyPress(KeyCode.Return);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.JoystickButton7))
+        //{
+        //    OnKeyPress(KeyCode.JoystickButton7);
+        //}
+        //   text.text += Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") != 0 ? "x: " + Input.GetAxis("Horizontal") : "";
+        //  text.text += Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") != 0 ? "y: " + Input.GetAxis("Vertical") : "";
+
+        if (Input.GetKeyDown(KeyCode.JoystickButton2))
         {
-            OnKeyPress(KeyCode.JoystickButton2);
+            OnKeyPress(directions.up);
         }
         else if (Input.GetKeyDown(KeyCode.JoystickButton3))
         {
-            OnKeyPress(KeyCode.JoystickButton3);
+            OnKeyPress(directions.right);
+        }
+        else if (Input.GetKeyDown(KeyCode.JoystickButton0))
+        {
+            OnKeyPress(directions.left);
+        }
+        else if (Input.GetKeyDown(KeyCode.Joystick1Button1))
+        {
+            OnKeyPress(directions.down);
         }
         else if (Input.GetKeyDown(KeyCode.RightShift))
         {
-            OnKeyPress(KeyCode.RightShift);
+            OnKeyPress(directions.click);
         }
-        else if (Input.GetKeyDown(KeyCode.Return))
+        else if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            OnKeyPress(KeyCode.Return);
+            OnKeyPress(directions.click);
         }
-        else if (Input.GetKeyDown(KeyCode.JoystickButton7))
-        {
-            OnKeyPress(KeyCode.JoystickButton7);
-        }
-        
+
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            OnKeyPress(KeyCode.UpArrow);
+            OnKeyPress(directions.up);
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            OnKeyPress(KeyCode.RightArrow);
+            OnKeyPress(directions.right);
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            OnKeyPress(KeyCode.LeftArrow);
+            OnKeyPress(directions.left);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            OnKeyPress(KeyCode.DownArrow);
+            OnKeyPress(directions.down);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            OnKeyPress(KeyCode.Space);
+            OnKeyPress(directions.click);
+        }
+
+        if(Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") == 1)
+        {
+            OnKeyPress(directions.down);
+        }
+        else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") == -1)
+        {
+            OnKeyPress(directions.up);
+        }
+        else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") == -1)
+        {
+            OnKeyPress(directions.left);
+        }
+        else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") == 1)
+        {
+            OnKeyPress(directions.right);
         }
     }
 }
