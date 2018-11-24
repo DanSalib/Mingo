@@ -13,6 +13,8 @@ public class FtueController : MonoBehaviour {
     public Image FtueIndicator;
     public Button StartButton;
     private Coroutine curCoroutine = null;
+    private bool ftueClick = false;
+    public MainUIController uiController;
 
 	// Use this for initialization
 	void Start () {
@@ -20,8 +22,23 @@ public class FtueController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	}
+	void Update ()
+    {
+        if(!ftueClick)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ftueClick = false;
+                OnStartClick();
+            }
+            else if (Input.GetKeyDown(KeyCode.JoystickButton7))
+            {
+                ftueClick = false;
+                OnStartClick();
+            }
+        }
+
+    }
 
     private IEnumerator FadeInMainUI()
     {
@@ -74,10 +91,12 @@ public class FtueController : MonoBehaviour {
         }
         NavController.curPanel = startPanel;
         NavController.moveIndicator();
+        NavController.ftueActive = false;
     }
 
     public void OnStartClick()
     {
+        uiController.SleepTimer.Start();
         StartCoroutine(FadeOutFtue());
     }
 }

@@ -33,7 +33,7 @@ public class YoutubeVideoListCreator : MonoBehaviour
         { "music" , "UC-9-kyTW8ZkZNDHQJ6FgpwQ"},
         { "nature" ,  "UC4UWbQ23IbWwU-XG7XIWxvQ" },
         { "news" , "UCuFFtHWoLl5fauMMD5Ww2jA" },
-        { "comedy" , "UCUsN5ZwHx2kILm84-jPDeXw" },
+        { "comedy" , "UCwWhs_6x42TyRM4Wstoq8HA" },
         { "automotive" , "UCsAegdhiYLEoaFGuJFVrqFQ" },
         { "cooking" , "UCJFp8uSYCjXOMnkUyb3CQ3Q" },
         { "nba" , "UCWJ2lWNubArHWmf3FIHbfcQ" },

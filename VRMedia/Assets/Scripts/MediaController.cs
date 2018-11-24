@@ -31,6 +31,18 @@ public class MediaController : MonoBehaviour {
 
     }
 
+    private void Awake()
+    {
+        SimplePlayback.Play_Pause();
+        SimplePlayback.videoId = "PMVAi1j9TQ0";
+        SimplePlayback.PlayYoutubeVideo("PMVAi1j9TQ0");
+        if (curCoroutine != null)
+        {
+            StopCoroutine(curCoroutine);
+        }
+        curCoroutine = StartCoroutine(VideoLoading());
+    }
+
     private void VideoPrepared()
     {
         videoReady = true;

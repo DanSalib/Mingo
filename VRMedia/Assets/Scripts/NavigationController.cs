@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Diagnostics;
 public class NavigationController : MonoBehaviour {
 
     public delegate void KeyPress(directions d);
@@ -9,15 +10,18 @@ public class NavigationController : MonoBehaviour {
     public Text text;
 
     public MainUIController uiController;
-
+    public bool ftueActive = true;
     public GameObject backIndicator;
     public GameObject viewPort;
     public GameObject indicator;
     public NavObject curPanel;
     public NavObject prevPanel;
 
+    private Stopwatch joystickTimer = new Stopwatch();
+
     private void Start()
     {
+        joystickTimer.Start();
         OnKeyPress += ChangeCurPanel;
     }
 
@@ -32,7 +36,7 @@ public class NavigationController : MonoBehaviour {
 
     private void ChangeCurPanel(directions d)
     {
-        if(uiController.disableButtons == true)
+        if(ftueActive || uiController.disableButtons == true)
         {
             return;
         }
@@ -116,29 +120,6 @@ public class NavigationController : MonoBehaviour {
         //    if (Input.GetKeyDown(kcode))
         //        text.text += ("" + kcode);
         //}
-        //if (Input.GetKeyDown(KeyCode.JoystickButton2))
-        //{
-        //    OnKeyPress(KeyCode.JoystickButton2);
-        //}
-        //else if (Input.GetKeyDown(KeyCode.JoystickButton3))
-        //{
-        //    OnKeyPress(KeyCode.JoystickButton3);
-        //}
-        //else if (Input.GetKeyDown(KeyCode.RightShift))
-        //{
-        //    OnKeyPress(KeyCode.RightShift);
-        //}
-        //else if (Input.GetKeyDown(KeyCode.Return))
-        //{
-        //    OnKeyPress(KeyCode.Return);
-        //}
-        //else if (Input.GetKeyDown(KeyCode.JoystickButton7))
-        //{
-        //    OnKeyPress(KeyCode.JoystickButton7);
-        //}
-        //   text.text += Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") != 0 ? "x: " + Input.GetAxis("Horizontal") : "";
-        //  text.text += Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") != 0 ? "y: " + Input.GetAxis("Vertical") : "";
-
         if (Input.GetKeyDown(KeyCode.JoystickButton2))
         {
             OnKeyPress(directions.up);
@@ -147,22 +128,45 @@ public class NavigationController : MonoBehaviour {
         {
             OnKeyPress(directions.right);
         }
-        else if (Input.GetKeyDown(KeyCode.JoystickButton0))
-        {
-            OnKeyPress(directions.left);
-        }
-        else if (Input.GetKeyDown(KeyCode.Joystick1Button1))
+        else if (Input.GetKeyDown(KeyCode.RightShift))
         {
             OnKeyPress(directions.down);
         }
-        else if (Input.GetKeyDown(KeyCode.RightShift))
+        else if (Input.GetKeyDown(KeyCode.Return))
+        {
+            OnKeyPress(directions.left);
+        }
+        else if (Input.GetKeyDown(KeyCode.JoystickButton7))
         {
             OnKeyPress(directions.click);
         }
-        else if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            OnKeyPress(directions.click);
-        }
+        //   text.text += Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") != 0 ? "x: " + Input.GetAxis("Horizontal") : "";
+        //  text.text += Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") != 0 ? "y: " + Input.GetAxis("Vertical") : "";
+
+        //if (Input.GetKeyDown(KeyCode.JoystickButton2))
+        //{
+        //    OnKeyPress(directions.up);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.JoystickButton3))
+        //{
+        //    OnKeyPress(directions.right);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.JoystickButton0))
+        //{
+        //    OnKeyPress(directions.left);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.Joystick1Button1))
+        //{
+        //    OnKeyPress(directions.down);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.RightShift))
+        //{
+        //    OnKeyPress(directions.click);
+        //}
+        //else if (Input.GetKeyDown(KeyCode.LeftShift))
+        //{
+        //    OnKeyPress(directions.click);
+        //}
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
@@ -185,21 +189,32 @@ public class NavigationController : MonoBehaviour {
             OnKeyPress(directions.click);
         }
 
-        if(Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") == 1)
+        if(joystickTimer.ElapsedMilliseconds > 200f)
         {
-            OnKeyPress(directions.down);
-        }
-        else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") == -1)
-        {
-            OnKeyPress(directions.up);
-        }
-        else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") == -1)
-        {
-            OnKeyPress(directions.left);
-        }
-        else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") == 1)
-        {
-            OnKeyPress(directions.right);
+            if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") == 1)
+            {
+                joystickTimer.Reset();
+                joystickTimer.Start();
+                OnKeyPress(directions.right);
+            }
+            else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") == -1)
+            {
+                joystickTimer.Reset();
+                joystickTimer.Start();
+                OnKeyPress(directions.left);
+            }
+            else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") == -1)
+            {
+                joystickTimer.Reset();
+                joystickTimer.Start();
+                OnKeyPress(directions.down);
+            }
+            else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") == 1)
+            {
+                joystickTimer.Reset();
+                joystickTimer.Start();
+                OnKeyPress(directions.up);
+            }
         }
     }
 }

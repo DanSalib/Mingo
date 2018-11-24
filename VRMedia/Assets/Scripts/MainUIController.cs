@@ -19,12 +19,13 @@ public class MainUIController : MonoBehaviour {
     public delegate void PanelsLoaded(PanelController panel);
     public static event PanelsLoaded OnLoaded;
 
-    public Stopwatch SleepTimer = null;
+    private bool firstTime = true;
+
+    public Stopwatch SleepTimer = new Stopwatch();
 
     long duration = 2000;
 
     public bool disableButtons = false;
-
 
     // Use this for initialization
     void Start ()
@@ -42,7 +43,16 @@ public class MainUIController : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-		if(CategoryUI.activeInHierarchy && SleepTimer?.ElapsedMilliseconds > 3500f)
+        if (firstTime && CategoryUI.activeInHierarchy && SleepTimer?.ElapsedMilliseconds > 7000f)
+        {
+            firstTime = false;
+            NavController.indicator.SetActive(false);
+            StartCoroutine(CenterVideo());
+            StartCoroutine(FadeCategories());
+            SleepTimer.Stop();
+            SleepTimer.Reset();
+        }
+        else if (!firstTime && CategoryUI.activeInHierarchy && SleepTimer?.ElapsedMilliseconds > 3500f)
         {
             NavController.indicator.SetActive(false);
             StartCoroutine(CenterVideo());
@@ -66,10 +76,6 @@ public class MainUIController : MonoBehaviour {
 
     public void ShowListUI(PanelController panel)
     {
-        if(SleepTimer == null)
-        {
-            SleepTimer = new Stopwatch();
-        }
         SleepTimer?.Stop();
         SleepTimer?.Reset();
         disableButtons = true;
@@ -93,6 +99,7 @@ public class MainUIController : MonoBehaviour {
         else
         {
             StartCoroutine(ShowCategories());
+            ActivateUI(NavigationController.directions.click);
         }
 
     }
