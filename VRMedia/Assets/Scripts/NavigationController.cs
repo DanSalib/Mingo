@@ -8,21 +8,43 @@ public class NavigationController : MonoBehaviour {
     public delegate void KeyPress(directions d);
     public static event KeyPress OnKeyPress;
     public Text text;
+    public VideoOptionsController videoOptions;
 
     public MainUIController uiController;
     public bool ftueActive = true;
     public GameObject backIndicator;
+    public GameObject vidOptionsIndicator;
     public GameObject viewPort;
     public GameObject indicator;
     public NavObject curPanel;
     public NavObject prevPanel;
+    private directions prevDirection;
 
     private Stopwatch joystickTimer = new Stopwatch();
+    private NavObject startPanel;
 
     private void Start()
     {
+        SessionController.OnSessionReset += ResetNav;
         joystickTimer.Start();
         OnKeyPress += ChangeCurPanel;
+    }
+
+    private void OnEnable()
+    {
+        startPanel = curPanel;
+    }
+
+    private void OnDestroy()
+    {
+        SessionController.OnSessionReset -= ResetNav;
+    }
+
+    public void ResetNav()
+    {
+        ftueActive = true;
+        curPanel = startPanel;
+        vidOptionsIndicator.SetActive(false);
     }
 
     public enum directions
@@ -36,27 +58,43 @@ public class NavigationController : MonoBehaviour {
 
     private void ChangeCurPanel(directions d)
     {
-        if(ftueActive || uiController.disableButtons == true)
+        if(ftueActive || uiController.disableButtons || uiController.isSleeping)
         {
             return;
         }
+
         if(d == directions.up)
         {
-            if (curPanel.isBack)
+            if (curPanel.isBack || (curPanel.upNeighbor.isVideo && videoOptions.mediaController.disableVideoOptions))
             {
                 return;
             }
-            curPanel = curPanel.upNeighbor ?? curPanel;
-            if (viewPort.activeInHierarchy && indicator.transform.localPosition.y > -84 && viewPort.transform.localPosition.y > 50)
+            else if (curPanel.upNeighbor != null && curPanel.upNeighbor.isVideo)
             {
-                var curPos = viewPort.transform.localPosition;
-                viewPort.transform.localPosition = new Vector3(curPos.x, curPos.y - 131, curPos.z);
+                ShowVideoOptions();
+                indicator.SetActive(false);
+                prevPanel = curPanel;
+                curPanel = curPanel.upNeighbor ?? curPanel;
+                moveIndicator();
+            } else if(prevPanel == null)
+            {
+                curPanel = curPanel.upNeighbor ?? curPanel;
+                if (viewPort.activeInHierarchy && indicator.transform.localPosition.y > -84 && viewPort.transform.localPosition.y > 50)
+                {
+                    var curPos = viewPort.transform.localPosition;
+                    viewPort.transform.localPosition = new Vector3(curPos.x, curPos.y - 131, curPos.z);
+                }
+                moveIndicator();
             }
-            moveIndicator();
         }
         else if (d == directions.right)
         {
-            if (prevPanel != null)
+            if (curPanel.isVideo)
+            {
+                curPanel = curPanel.rightNeighbor ?? curPanel;
+                moveIndicator();
+            }
+            else if (prevPanel != null)
             {
                 backIndicator.SetActive(false);
                 indicator.SetActive(true);
@@ -75,24 +113,40 @@ public class NavigationController : MonoBehaviour {
             {
                 return;
             }
-            curPanel = curPanel.downNeighbor ?? curPanel;
-            if (viewPort.activeInHierarchy && indicator.transform.localPosition.y < -200 && viewPort.transform.localPosition.y < 280)
+            else if (prevPanel != null)
             {
-                var curPos = viewPort.transform.localPosition;
-                viewPort.transform.localPosition = new Vector3(curPos.x, curPos.y + 131, curPos.z);
+                HideOptions();
+                vidOptionsIndicator.SetActive(false);
+                indicator.SetActive(true);
+                curPanel = prevPanel;
+                prevPanel = null;
             }
-            moveIndicator();
+            else
+            {
+                curPanel = curPanel.downNeighbor ?? curPanel;
+                if (viewPort.activeInHierarchy && indicator.transform.localPosition.y < -200 && viewPort.transform.localPosition.y < 280)
+                {
+                    var curPos = viewPort.transform.localPosition;
+                    viewPort.transform.localPosition = new Vector3(curPos.x, curPos.y + 131, curPos.z);
+                }
+                moveIndicator();
+            }
         }
         else if (d == directions.left)
         {
-            if(curPanel.leftNeighbor != null && curPanel.leftNeighbor.isBack)
+            if (curPanel.isVideo)
+            {
+                curPanel = curPanel.leftNeighbor ?? curPanel;
+                moveIndicator();
+            }
+            else if (curPanel.leftNeighbor != null && curPanel.leftNeighbor.isBack)
             {
                 backIndicator.SetActive(true);
                 indicator.SetActive(false);
                 prevPanel = curPanel;
                 curPanel = curPanel.leftNeighbor ?? curPanel;
             }
-            else if (prevPanel == null)
+            else
             {
                 curPanel = curPanel.leftNeighbor ?? curPanel;
                 moveIndicator();
@@ -101,7 +155,10 @@ public class NavigationController : MonoBehaviour {
         else if (d == directions.click)
         {
             indicator.SetActive(false);
-            prevPanel = null;
+            if (curPanel != null && !curPanel.isVideo)
+            {
+                prevPanel = null;
+            }
             curPanel.thisButton.onClick.Invoke();
             backIndicator.SetActive(false);
         }
@@ -109,8 +166,25 @@ public class NavigationController : MonoBehaviour {
 
     public void moveIndicator()
     {
-        indicator.SetActive(true);
-        indicator.transform.position = curPanel.thisObject.transform.position;
+        if (curPanel != null && !curPanel.isBack && !curPanel.isVideo)
+        {
+            indicator.SetActive(true);
+            indicator.transform.position = curPanel.thisObject.transform.position;
+        } else if (curPanel != null && curPanel.isVideo)
+        {
+            vidOptionsIndicator.SetActive(true);
+            vidOptionsIndicator.transform.position = curPanel.thisObject.transform.position;
+        }
+    }
+
+    public void ShowVideoOptions()
+    {
+        videoOptions.ShowVideoOptions();
+    }
+
+    public void HideOptions()
+    {
+        videoOptions.HideVideoOptions();
     }
 
     // Update is called once per frame
@@ -189,32 +263,33 @@ public class NavigationController : MonoBehaviour {
             OnKeyPress(directions.click);
         }
 
-        if(joystickTimer.ElapsedMilliseconds > 200f)
+        if ((prevDirection != directions.right || joystickTimer.ElapsedMilliseconds > 200f) && Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") == 1)
         {
-            if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") == 1)
-            {
-                joystickTimer.Reset();
-                joystickTimer.Start();
-                OnKeyPress(directions.right);
-            }
-            else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") == -1)
-            {
-                joystickTimer.Reset();
-                joystickTimer.Start();
-                OnKeyPress(directions.left);
-            }
-            else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") == -1)
-            {
-                joystickTimer.Reset();
-                joystickTimer.Start();
-                OnKeyPress(directions.down);
-            }
-            else if (Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") == 1)
-            {
-                joystickTimer.Reset();
-                joystickTimer.Start();
-                OnKeyPress(directions.up);
-            }
+            joystickTimer.Reset();
+            joystickTimer.Start();
+            prevDirection = directions.right;
+            OnKeyPress(directions.right);
+        }
+        else if ((prevDirection != directions.left || joystickTimer.ElapsedMilliseconds > 200f) && Input.GetAxisRaw("Oculus_GearVR_LThumbstickX") == -1)
+        {
+            joystickTimer.Reset();
+            joystickTimer.Start();
+            prevDirection = directions.left;
+            OnKeyPress(directions.left);
+        }
+        else if ((prevDirection != directions.down || joystickTimer.ElapsedMilliseconds > 200f) && Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") == -1)
+        {
+            joystickTimer.Reset();
+            joystickTimer.Start();
+            prevDirection = directions.down;
+            OnKeyPress(directions.down);
+        }
+        else if ((prevDirection != directions.up || joystickTimer.ElapsedMilliseconds > 200f) && Input.GetAxisRaw("Oculus_GearVR_LThumbstickY") == 1)
+        {
+            joystickTimer.Reset();
+            joystickTimer.Start();
+            prevDirection = directions.up;
+            OnKeyPress(directions.up);
         }
     }
 }

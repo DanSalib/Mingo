@@ -11,4 +11,5 @@ public class NavObject : MonoBehaviour {
     public NavObject leftNeighbor;
     public NavObject rightNeighbor;
     public bool isBack = false;
+    public bool isVideo = false;
 }

@@ -24,6 +24,8 @@ public class SimplePlayback : MonoBehaviour
     public delegate void VideoPrepared();
     public static event VideoPrepared OnReady;
 
+    public delegate void VideoFinished();
+    public static event VideoFinished OnFinished;
 
     IEnumerator Start()
     {
@@ -162,6 +164,7 @@ public class SimplePlayback : MonoBehaviour
 
     public void OnVideoFinished()
     {
+        OnFinished();
         Debug.Log("Video finished");
     }
 
@@ -169,7 +172,10 @@ public class SimplePlayback : MonoBehaviour
     public void Play_Pause()
     {
         if (unityVideoPlayer.isPlaying)
+        {
+            OnFinished();
             unityVideoPlayer.Pause();
+        }
         else
             unityVideoPlayer.Play();
     }

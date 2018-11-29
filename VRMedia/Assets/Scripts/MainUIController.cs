@@ -6,6 +6,8 @@ using System.Diagnostics;
 
 public class MainUIController : MonoBehaviour {
 
+    public GameObject MainUI;
+
     public GameObject MediaUI;
 
     public GameObject VideoListUI;
@@ -13,8 +15,10 @@ public class MainUIController : MonoBehaviour {
     public GameObject CategoryUI;
 
     public ListController ListController;
-
+    
     public NavigationController NavController;
+
+    public MediaController mediaController;
 
     public delegate void PanelsLoaded(PanelController panel);
     public static event PanelsLoaded OnLoaded;
@@ -23,16 +27,21 @@ public class MainUIController : MonoBehaviour {
 
     public Stopwatch SleepTimer = new Stopwatch();
 
+    public Stopwatch VidOptionsTimer = new Stopwatch();
+
     long duration = 2000;
 
     public bool disableButtons = false;
+    public bool isSleeping = false;
 
     // Use this for initialization
     void Start ()
     {
+        SleepTimer = new Stopwatch();
         PanelController.OnClicked += ShowListUI;
         VideoItemController.OnClicked += HideListUI;
         NavigationController.OnKeyPress += ActivateUI;
+        SessionController.OnSessionReset += ResetUI;
     }
 
     private void OnDestroy()
@@ -49,6 +58,7 @@ public class MainUIController : MonoBehaviour {
             NavController.indicator.SetActive(false);
             StartCoroutine(CenterVideo());
             StartCoroutine(FadeCategories());
+            isSleeping = true;
             SleepTimer.Stop();
             SleepTimer.Reset();
         }
@@ -57,10 +67,30 @@ public class MainUIController : MonoBehaviour {
             NavController.indicator.SetActive(false);
             StartCoroutine(CenterVideo());
             StartCoroutine(FadeCategories());
+            StartCoroutine(FadeCategories());
+            isSleeping = true;
             SleepTimer.Stop();
             SleepTimer.Reset();
         }
+
+        if(VidOptionsTimer.ElapsedMilliseconds > 2000f)
+        {
+            HideVideoOptions();
+        }
 	}
+
+    public void ResetUI()
+    {
+        ActivateUI(NavigationController.directions.click);
+        firstTime = true;
+        SleepTimer.Reset();
+        disableButtons = true;
+        NavController.prevPanel = null;
+        NavController.curPanel = ListController?.curCategoryPanel?.gameObject?.GetComponent<NavObject>();
+        NavController.indicator.transform.localScale = new Vector3(1.5f, 1.5f);
+        StartCoroutine(HideVideos());
+        StartCoroutine(ShowCategoriesAndDisableMain());
+    }
 
     public void ActivateUI(NavigationController.directions d)
     {
@@ -68,10 +98,26 @@ public class MainUIController : MonoBehaviour {
         {
             SleepTimer?.Reset();
             SleepTimer?.Start();
-            NavController.indicator.SetActive(true);
             StartCoroutine(MoveVidToTop());
             StartCoroutine(UnfadeCategories());
         }
+    }
+
+    public void TeaseVideoOptions()
+    {
+        NavController.ShowVideoOptions();
+        VidOptionsTimer?.Reset();
+        VidOptionsTimer?.Start();
+    }
+
+    public void HideVideoOptions()
+    {
+        if (NavController.curPanel != null && !NavController.curPanel.isVideo)
+        {
+            NavController.HideOptions();
+        }
+        VidOptionsTimer?.Reset();
+        VidOptionsTimer?.Stop();
     }
 
     public void ShowListUI(PanelController panel)
@@ -82,6 +128,7 @@ public class MainUIController : MonoBehaviour {
         NavController.curPanel = ListController.VideoList[0].gameObject.GetComponent<NavObject>();
         VideoListUI.SetActive(true);
         StartCoroutine(ShowVideos());
+        NavController.indicator.transform.localScale = new Vector3(1.95f, 2.4f);
         StartCoroutine(HideCategories());
     }
 
@@ -89,7 +136,8 @@ public class MainUIController : MonoBehaviour {
     {
         disableButtons = true;
         NavController.prevPanel = null;
-        NavController.curPanel = ListController.curCategoryPanel.gameObject.GetComponent<NavObject>();
+        NavController.curPanel = ListController?.curCategoryPanel?.gameObject?.GetComponent<NavObject>();
+        NavController.indicator.transform.localScale = new Vector3(1.5f, 1.5f);
         StartCoroutine(HideVideos());
         if(vid != null)
         {
@@ -99,7 +147,8 @@ public class MainUIController : MonoBehaviour {
         else
         {
             StartCoroutine(ShowCategories());
-            ActivateUI(NavigationController.directions.click);
+            SleepTimer?.Reset();
+            SleepTimer?.Start();
         }
 
     }
@@ -169,7 +218,6 @@ public class MainUIController : MonoBehaviour {
         }
         CategoryUI.SetActive(false);
         NavController.moveIndicator();
-        NavController.indicator.transform.localScale = new Vector3(1.95f, 2.4f);
         disableButtons = false;
     }
 
@@ -192,7 +240,6 @@ public class MainUIController : MonoBehaviour {
         }
         VideoListUI.SetActive(false);
         NavController.moveIndicator();
-        NavController.indicator.transform.localScale = new Vector3(1.5f, 1.5f);
     }
 
     private IEnumerator ShowVideos()
@@ -214,7 +261,7 @@ public class MainUIController : MonoBehaviour {
 
             yield return null;
         }
-        NavController.indicator.SetActive(true);
+        NavController.moveIndicator();
     }
 
     private IEnumerator ShowCategories()
@@ -241,8 +288,36 @@ public class MainUIController : MonoBehaviour {
             }
             yield return null;
         }
-        NavController.indicator.SetActive(true);
         disableButtons = false;
+    }
+
+
+    private IEnumerator ShowCategoriesAndDisableMain()
+    {
+        CategoryUI.SetActive(true);
+
+        int rate = 4;
+        float t = 0;
+
+        Vector3 originalLocation = this.CategoryUI.transform.localPosition;
+        Button[] buttons = this.CategoryUI.GetComponentsInChildren<Button>();
+        Vector3 destination = new Vector3(-4, originalLocation.y, originalLocation.z);
+
+        while (t < 1)
+        {
+            t += Time.deltaTime * rate;
+
+            this.CategoryUI.transform.localPosition = Vector3.Lerp(originalLocation, destination, t);
+
+            foreach (var button in buttons)
+            {
+                var c = button.targetGraphic.color;
+                button.targetGraphic.color = new Color(c.r, c.g, c.b, t);
+            }
+            yield return null;
+        }
+        disableButtons = false;
+        MainUI.SetActive(false);
     }
 
     private IEnumerator UnfadeCategories()
@@ -265,6 +340,12 @@ public class MainUIController : MonoBehaviour {
             }
             yield return null;
         }
+        if (isSleeping && mediaController.isActuallyPlaying)
+        {
+            TeaseVideoOptions();
+        }
+        isSleeping = false;
+        NavController.moveIndicator();
     }
 
     private IEnumerator ShowFadedCategories()
@@ -291,7 +372,7 @@ public class MainUIController : MonoBehaviour {
             }
             yield return null;
         }
-        NavController.indicator.SetActive(true);
+        isSleeping = true;
         disableButtons = false;
     }
 
