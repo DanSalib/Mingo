@@ -4,6 +4,7 @@ using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 using Vuforia;
+using Sdkbox;
 
 
 public class SessionController : MonoBehaviour {
@@ -11,7 +12,7 @@ public class SessionController : MonoBehaviour {
     public Stopwatch SessionTimer = new Stopwatch();
     public Stopwatch CameraTimer = new Stopwatch();
 
-    public GoogleAnalyticsV4 googleAnalytics;
+    public GoogleAnalytics googleAnalytics;
 
     public VuforiaBehaviour vuforiaBehaviour;
     private const float SESSION_TIMOUT = 10000;
@@ -120,12 +121,13 @@ public class SessionController : MonoBehaviour {
 
     public void  ResetSession()
     {
-        googleAnalytics.LogEvent("SessionStatus", "Session", "SessionEnd", 1);
+        googleAnalytics.logEvent("SessionStatus", "Session", "SessionEnd", 1);
+        googleAnalytics.dispatchHits();
         waitingForNextSession = true;
         vuforiaBehaviour.enabled = false;
         SessionTimer.Reset();
         SessionTimer.Stop();
         OnSessionReset();
-        googleAnalytics.StopSession();
+        googleAnalytics.stopSession();
     }
 }

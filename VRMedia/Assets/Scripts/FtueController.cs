@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Sdkbox;
 
 public class FtueController : MonoBehaviour {
-    public GoogleAnalyticsV4 googleAnalytics;
+    public GoogleAnalytics googleAnalytics;
     public GameObject FtueGameObject;
     public NavigationController NavController;
     public GameObject MainUI;
@@ -122,7 +123,7 @@ public class FtueController : MonoBehaviour {
 
     public void OnStartClick()
     {
-        googleAnalytics.StartSession();
+        googleAnalytics.startSession();
         sessionController.waitingForNextSession = false;
         sessionController.vuforiaBehaviour.enabled = true;
         uiController.SleepTimer.Start();
